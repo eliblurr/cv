@@ -8,6 +8,7 @@ import { GlobeIcon, MailIcon, PhoneIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RESUME_DATA } from "@/data/resume-data";
 import { ProjectCard } from "@/components/project-card";
+import { SectionHeading } from "@/components/section-heading";
 
 export const metadata: Metadata = {
   title: `${RESUME_DATA.name} | ${RESUME_DATA.about}`,
@@ -93,13 +94,13 @@ export default function Page() {
           </Avatar>
         </div>
         <Section>
-          <h2 className="text-xl font-bold">About</h2>
+          <SectionHeading id="about">About</SectionHeading>
           <p className="text-pretty font-mono text-sm text-muted-foreground">
             {RESUME_DATA.summary}
           </p>
         </Section>
         <Section>
-          <h2 className="text-xl font-bold">Work Experience</h2>
+          <SectionHeading id="work">Work Experience</SectionHeading>
           {RESUME_DATA.work.map((work) => {
             return (
               <Card key={work.company}>
@@ -144,7 +145,7 @@ export default function Page() {
           })}
         </Section>
         <Section>
-          <h2 className="text-xl font-bold">Education</h2>
+          <SectionHeading id="education">Education</SectionHeading>
           {RESUME_DATA.education.map((education) => {
             return (
               <Card key={education.school}>
@@ -164,7 +165,7 @@ export default function Page() {
           })}
         </Section>
         <Section>
-          <h2 className="text-xl font-bold">Skills</h2>
+          <SectionHeading id="skills">Skills</SectionHeading>
           <div className="flex flex-wrap gap-1">
             {RESUME_DATA.skills.map((skill) => {
               return <Badge key={skill}>{skill}</Badge>;
@@ -173,7 +174,7 @@ export default function Page() {
         </Section>
 
         <Section className="print-force-new-page scroll-mb-16">
-          <h2 className="text-xl font-bold">Projects</h2>
+          <SectionHeading id="projects">Projects</SectionHeading>
           {Object.entries(RESUME_DATA.projectSuites).map(([suiteId, suite]) => {
             const suiteProjects = RESUME_DATA.projects.filter(
               (project) => "suite" in project && project.suite === suiteId,
@@ -181,7 +182,8 @@ export default function Page() {
             return (
               <div
                 key={suiteId}
-                className="space-y-3 rounded-lg border border-border bg-muted/60 p-3 shadow-inner print:bg-muted/40"
+                id={suiteId}
+                className="scroll-mt-16 space-y-3 rounded-lg border border-border bg-muted/60 p-3 shadow-inner print:bg-muted/40"
               >
                 <div className="space-y-1">
                   <h3 className="inline-flex items-center gap-x-2 text-base font-semibold leading-none">
