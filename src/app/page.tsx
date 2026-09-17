@@ -17,11 +17,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <main className="container relative mx-auto scroll-my-12 overflow-auto p-4 print:p-12 md:p-16">
-      <section className="mx-auto w-full max-w-2xl space-y-8 bg-white print:space-y-6">
+      <section className="mx-auto w-full max-w-4xl space-y-8 bg-white print:space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex-1 space-y-1.5">
             <h1 className="text-2xl font-bold">{RESUME_DATA.name}</h1>
-            <p className="max-w-md text-pretty font-mono text-sm text-muted-foreground">
+            <p className="max-w-lg text-pretty font-mono text-sm text-muted-foreground">
               {RESUME_DATA.about}
             </p>
             <p className="max-w-md items-center text-pretty font-mono text-xs text-muted-foreground">
@@ -67,7 +67,7 @@ export default function Page() {
                   size="icon"
                   asChild
                 >
-                  <a href={social.url}>
+                  <a href={social.url} target="_blank" rel="noreferrer">
                     <social.icon className="size-4" />
                   </a>
                 </Button>
@@ -106,7 +106,12 @@ export default function Page() {
                 <CardHeader>
                   <div className="flex items-center justify-between gap-x-2 text-base">
                     <h3 className="inline-flex items-center justify-center gap-x-1 font-semibold leading-none">
-                      <a className="hover:underline" href={work.link}>
+                      <a
+                        className="hover:underline"
+                        href={work.link}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         {work.company}
                       </a>
 
@@ -169,18 +174,64 @@ export default function Page() {
 
         <Section className="print-force-new-page scroll-mb-16">
           <h2 className="text-xl font-bold">Projects</h2>
+          {Object.entries(RESUME_DATA.projectSuites).map(([suiteId, suite]) => {
+            const suiteProjects = RESUME_DATA.projects.filter(
+              (project) => "suite" in project && project.suite === suiteId,
+            );
+            return (
+              <div
+                key={suiteId}
+                className="space-y-3 rounded-lg border border-border bg-muted/60 p-3 shadow-inner print:bg-muted/40"
+              >
+                <div className="space-y-1">
+                  <h3 className="inline-flex items-center gap-x-2 text-base font-semibold leading-none">
+                    <a
+                      className="hover:underline"
+                      href={suite.link.href}
+                      target="_blank"
+                    >
+                      {suite.title}
+                    </a>
+                    <Badge variant="secondary" className="text-[10px]">
+                      {suiteProjects.length} repositories
+                    </Badge>
+                  </h3>
+                  <p className="font-mono text-xs text-muted-foreground">
+                    {suite.subtitle}
+                  </p>
+                  <p className="font-mono text-xs text-muted-foreground">
+                    {suite.description}
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 gap-3 print:grid-cols-3 print:gap-2 md:grid-cols-2 lg:grid-cols-3">
+                  {suiteProjects.map((project) => (
+                    <ProjectCard
+                      key={project.title}
+                      title={project.title}
+                      description={project.description}
+                      tags={project.techStack}
+                      link={"link" in project ? project.link.href : undefined}
+                      className="border-border shadow-sm"
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
           <div className="-mx-3 grid grid-cols-1 gap-3 print:grid-cols-3 print:gap-2 md:grid-cols-2 lg:grid-cols-3">
-            {RESUME_DATA.projects.map((project) => {
-              return (
-                <ProjectCard
-                  key={project.title}
-                  title={project.title}
-                  description={project.description}
-                  tags={project.techStack}
-                  link={"link" in project ? project.link.href : undefined}
-                />
-              );
-            })}
+            {RESUME_DATA.projects
+              .filter((project) => !("suite" in project))
+              .map((project) => {
+                return (
+                  <ProjectCard
+                    key={project.title}
+                    title={project.title}
+                    description={project.description}
+                    tags={project.techStack}
+                    link={"link" in project ? project.link.href : undefined}
+                  />
+                );
+              })}
           </div>
         </Section>
       </section>
